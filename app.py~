@@ -1,0 +1,160 @@
+"""
+Flask Documentation:     http://flask.pocoo.org/docs/
+Jinja2 Documentation:    http://jinja.pocoo.org/2/documentation/
+Werkzeug Documentation:  http://werkzeug.pocoo.org/documentation/
+
+This file creates your application.
+"""
+
+import os
+#import sys
+from flask import Flask, render_template, request, redirect, url_for, flash
+
+app = Flask(__name__)
+
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'x6dgbjldprk3lm52')
+
+class MyForm(Form):
+    name = StringField("Name", [validators.Required("Please Enter your Name")])
+    email = StringField("Email", [validators.Required("Please Enter your Email"), validators.email("Email's not Valid")])
+    company = StringField("Company", [validators.Required("Please Enter your Company")])
+    phone = StringField("Phone", [validators.Required("Please Enter your Phone")])
+    message = TextAreaField("Message", [validators.Required("Please Enter Message")])
+
+###
+# Routing for your application.
+###
+f1 = "/dt"
+f2 = "dt/"
+@app.route(f1)
+def home():
+    """Render website's home page."""
+    title = "Home"
+    return render_template(f2+'home.html', title=title, f1=f1, f2=f2)
+
+@app.route(f1+'/defaultsite')
+def default():
+    return redirect(url_for('home'))
+
+@app.route(f1+'/what-we-do')
+def about():
+    title = "What We Do."
+    """Render the website's about page."""
+    return render_template(f2+'what.html', title=title)
+
+@app.route(f1+'/who-are-we')
+def team():
+    title = "About."
+    """Render the website's about page."""
+    return render_template(f2+'who.html', title=title)
+
+@app.route(f1+'/services')
+def services():
+    title = "Services."
+    """Render the website's about page."""
+    return render_template(f2+'services.html', title=title)
+
+@app.route(f1+'/contact', methods=['GET', 'POST'])
+def contact():
+    form = MyForm()
+    title = "Contact."
+    if request.method == 'POST':
+        if form.validate():
+            message = sendgrid.Mail()
+            message.add_to("service@unitedfr.com")
+            message.set_from("ufr.server@gmail.com")
+            message.set_subject("Contact Inquiry")
+            message.set_html('<p>Person of Interest: %s</p><p>Email: %s</p><p>Company: %s</p><p>phone: %s</p><p>Message: %s</p>' % (form.name.data, form.email.data, form.company.data, form.phone.data, form.message.data))
+            sg.send(message)
+
+            return render_template(f2+'contact.html', form=form, title=title, posted_redirect=True)
+        else:
+            return render_template(f2+'contact.html', form=form, title=title, posted_redirect=False)
+
+    elif request.method == 'GET':
+        return render_template(f2+'contact.html', form=form, title=title)
+
+    else:
+        return redirect(url_for('contact'))
+
+@app.route(f1+'/successful', methods=['GET'])
+def successful():
+    return render_template(f2+'successful.html')
+
+###
+# Creating a new design, more mobile experience
+###
+m1 = "mobile/"
+@app.route('/')
+def mobile_home():
+    title = "Home"
+    return render_template(m1+'home.html', title=title)
+
+@app.route('/what-we-do')
+def mobile_what():
+    title = "What We Do"
+    return render_template(m1+'what-we-do.html', title=title)
+
+@app.route('/about')
+def mobile_about():
+    title = "About Us"
+    return render_template(m1+'about.html', title=title)
+
+@app.route('/services')
+def mobile_services():
+    title = "Services"
+    return render_template(m1+'services.html', title=title)
+
+@app.route('/contact', methods=['GET', 'POST'])
+def mobile_contact():
+    form = MyForm()
+    title = "Contact Us"
+    if request.method == 'POST':
+        if form.validate():
+            message = sendgrid.Mail()
+            message.add_to("service@unitedfr.com")
+            message.set_from("ufr.server@gmail.com")
+            message.set_subject("Contact Inquiry")
+            message.set_html('<p>Person of Interest: %s</p><p>Email: %s</p><p>Company: %s</p><p>phone: %s</p><p>Message: %s</p>' % (form.name.data, form.email.data, form.company.data, form.phone.data, form.message.data))
+            sg.send(message)
+
+            return render_template(m1+'successful.html', form=form, title=title, posted_redirect=True)
+        else:
+            return render_template(m1+'contact.html', form=form, title=title, posted_redirect=False)
+
+    elif request.method == 'GET':
+        return render_template(m1+'contact.html', form=form, title=title)
+
+    else:
+        return redirect(url_for(m1+'contact.html'))
+
+@app.route('/contractor')
+def contractor_form():
+    return render_template(m1+'contractor.html')
+
+###
+# The functions below should be applicable to all Flask apps.
+###
+
+@app.after_request
+def add_header(response):
+    """
+    Add headers to both force latest IE rendering engine or Chrome Frame,
+    and also to cache the rendered page for 10 minutes.
+    """
+    response.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
+    response.headers['Cache-Control'] = 'public, max-age=600'
+    return response
+
+
+@app.errorhandler(404)
+def page_not_found(error):
+    """Custom 404 page."""
+    return render_template(m1+'404.html'), 404
+
+@app.errorhandler(500)
+def internal_error(error):
+    return render_template(m1+'500.html'), 500
+
+if __name__ == '__main__':
+    app.run(debug=True)

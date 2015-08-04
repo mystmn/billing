@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block inc_script %}
+
+{% endblock %}
+
+{% block main_content %}
+<p>{{msg}}</p>
+<p></p>
+
+{% for key, value in tbl_select_results.items() %}
+<div class="row" style="margin: 4px;">
+    <div class="col-xs-3">
+        {{ key }} : {{ value }}
+    </div>
+    {% for i in cmd %}
+    <div class="col-xs-1"><a href="{{ url_for('dbset')}}{{key}}/{{i.lower()}}">{{i}}</a></div>
+    {% endfor %}
+    <!--   <ul><li>{{ i }}</li></ul></div> -->
+</div>
+{% endfor %}
+
+{% if results %}
+    {% for go in results %}
+        <p>
+        {% for label in go %}
+            {% include 'forms.html' %}
+            {% endfor %}
+        </p>
+    {% endfor %}
+
+{% include 'forms.html' %}
+
+{% endif %}
+{% endblock %}

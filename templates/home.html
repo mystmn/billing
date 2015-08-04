@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block inc_script %}
+
+{% endblock %}
+
+{% block main_content %}
+<div class="row">
+    <div class="col-xs-12">
+        <h3><p class="text-center text-capitalize">Home Page</p></h3>
+    </div>
+</div>
+
+<div class="row" style="max-width: 550px ; padding: 1px; overflow:hidden;">
+    <div class="row">
+        <div class="col-xs-3">
+            <h4></h4>
+        </div>
+        <div class="col-xs-2">
+            <h4>Income</h4>
+        </div>
+        <div class="col-xs-2">
+            <h4>Liability</h4>
+        </div>
+        <div class="col-xs-2">
+            <h4>Assets</h4>
+        </div>
+        <div class="col-xs-2">
+            <h4>Donations</h4>
+        </div>
+    </div>
+    <div class="row">
+        {% for month in list %}
+        <div class="row border">
+                <div class="col-xs-3">
+                </div>
+                <div class="col-xs-2">
+                    <h4>$200</h4>
+                </div>
+                <div class="col-xs-2">
+                    <h4>$400</h4>
+                </div>
+                <div class="col-xs-2">
+                    <h4>$250</h4>
+                </div>
+                <div class="col-xs-2">
+                    <h4>$250</h4>
+                </div>
+            </font>
+        </div>
+        {% endfor %}
+    </div>
+
+
+    <!--
+    <div class="row">
+        {% for g in results %}
+        <ul>
+
+            <li>{{ labels[0] }} -
+                <div class="red">{{ g[0] }}</div>
+            </li>
+            <li>{{ labels[1] }} - {{ g[1] }}</li>
+            <li>{{ labels[2] }} - {{ g[2] }}</li>
+            <li>{{ labels[3] }} - {{ g[3] }}</li>
+            <li>{{ labels[4] }} - {{ g[4] }}</li>
+        </ul>
+        {% endfor %}
+    </div>
+    -->
+    {% endblock %}

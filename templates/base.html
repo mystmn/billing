@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="keywords" content={% block metaKeywords %}{% endblock %}>
+    <meta name="description" content={% block metaDescription %}{% endblock %}>
+    <title>{{ title }} - Personal Billing</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="/static/css/default.css">
+    {% block inc_script %}{% endblock %}
+</head>
+<body>
+<div id="wrap">
+    {% include "header.html" %}
+    <div class="container">
+        {% block main_content %}{% endblock %}
+    </div>
+</div>
+{% include "footer.html" %}
+</body>
+</html>

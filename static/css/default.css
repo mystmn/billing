@@ -1,0 +1,30 @@
+.reduceSpace, .red{
+  display: inline-block;
+ }
+
+.red{
+	color:red;
+}
+
+.border{
+	border-bottom-style: solid;
+    border-width: 1px;
+    color: black;
+    margin: 5px;
+}
+
+.orange{
+	background-color: ;
+}
+
+ul{
+	list-style-type: none;
+}
+li{
+	padding: 0 4px 0 4px;
+    display: inline;
+}
+
+.mainList{
+	background-color: orange;
+}
