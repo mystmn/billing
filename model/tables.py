@@ -7,27 +7,24 @@ app = Flask(__name__)
 class dbStructure(object):
 
     def __init__(self):
+        ''' Takes the URL Query request, compares to our static dict, and looks through our database '''
         self.tableNames = {'Bill':'billing', 'cows':'test', 'queryTableNames':'d'}
 
-        '''
-        Key = sqlite3 sets
-        Value = URL Query
-        '''
+        ''' Same thing here, URL Query to predetermined dict, compares and continues to database '''
         self.operatorList = {'SELECT':'view', 'CREATE':'insert','DROP':'delete','UPDATE':'update'}
-#        nn = "NOT NULL"
-#        self.id = {'id' : 'Integer PRIMARY KEY autoincrement'}
-#        self.name = {'name': ' varchar(75) ' + nn}
-#        self.creationDate = {'dateCreated' : 'DATE'}
-#        self.lastName = {'LastName','varchar(255) ' + nn}
-#        self.fistName = {'FirstName','varchar(255) ' + nn}
-#        self.address = {'Address', 'varchar(255) ' + nn}
-#        self.city = {'City', 'varchar(255) ' + nn}
+
+        ''' Let's put our database connection on standby'''
         self.feed = backbone.get_db()
 
-    def main(self, queryTableName, queryOperator=None, searchingFor=None ):
-        a = {}
-        default = {queryTableName:False}
+        self.default = {}
 
+    def main(self, queryTableName, queryOperator=None, dbColumnSearch=None ):
+        '''
+        Example:
+            [queryOperator=SELECT] [dbColumnSearch=id, name, date] FROM [queryTableName=Billing]
+        '''
+
+        a = {}
         secureTableName = func_.dictValueExist(queryTableName, self.tableNames)
 
         if self.verifyTableExistence(secureTableName):
@@ -36,26 +33,30 @@ class dbStructure(object):
 
                 tableOperator = func_.dictValueExist(queryOperator, self.operatorList)
 
-                return self.dbSelectForResults(secureTableName, tableOperator, searchingFor)
+                return self.dbSelectForResults(secureTableName, tableOperator, dbColumnSearch)
 
             else:
                 a = {"Table Exist, no operator specified": False}
 
         else:
-            a.update(default)
+            msg = "The requested table doesn't exist '%s'"% secureTableName
+            self.default = {msg: False}
+            return self.default
 
         return a
 
-    def dbSelectForResults(self, table=None, operator=None, listColumns="*"):
+    def dbSelectForResults(self, table=None, operator=None, searchColumns="*"):
         db = backbone.get_db()
-        listSelection = ", ".join(listColumns)
+        listSelection = ", ".join(searchColumns)
+
         try:
             cur = db.execute(operator + ' ' + listSelection + ' FROM ' + table)
-            results = cur.fetchall()
+
+            return cur.fetchall()
+
         except:
-            results =  {"No Results found or error with operator": False}
-        # return render_template('home.html', labels=labels, results=results, list=list)
-        return (results)
+
+            self.default = {"No Results found or error with operator": False}
 
     def verifyTableExistence(self, table=None):
 
@@ -64,8 +65,7 @@ class dbStructure(object):
             return True
 
         except:
-
-            return {"Table doesn't exist", False}
+            self.default = {"Table doesn't exist", False}
 
     def tablecreation(self, naming):
         print ''
