@@ -9,12 +9,12 @@ import os
 import sys;
 
 sys.dont_write_bytecode = True
-from mod import func
 import random
 
 from flask import Flask, render_template, stream_with_context, request, Response
 from wtforms import Form, StringField, validators
 from storage import backbone, helper
+from model import tables, func
 
 app = Flask(__name__)
 
@@ -33,22 +33,24 @@ def home():
 
 @app.route('/db/<table>/<type>', methods=('get', 'post'))
 @app.route('/db/')
+@app.route('/db/<table>')
 def dbset(table=None, type=None):
-    sel = []
-    results = False
+    tName = table
+    ''' Sqlite3 operators '''
     cmd = ["View", "Insert", "Delete", "Update"]
-    msg = "Running table %s" % table
 
-    if type == cmd[0].lower():
-        sel.extend(['id', 'FirstName', 'LastName'])
+    ''' What Columns am I looking for? '''
+    selectorsUnite = ["id", "lastName", "firstName"]
 
-        results = helper.dbStructure().dbSelect(table, sel)
-        tbl_select_results = helper.dbStructure().main()
+    ''' Let's fetch our Database results now '''
+    tR = tables.dbStructure().main(table, type, selectorsUnite)
 
-    if type == cmd[1].lower():
-        print ''
+    if isinstance(tR, dict):
+        type = "dict"
+    elif isinstance(tR, list):
+        type = "list"
 
-    return render_template('db/viewer.html', msg=msg, cmd=cmd, tbl_select_results=tbl_select_results, results=results)
+    return render_template('db/viewer.html', cmd=cmd, tR=tR, tName=tName, type=type)
 
 #    months = ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Nov", "Dec"]
 

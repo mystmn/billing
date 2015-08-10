@@ -1,21 +1,37 @@
 from collections import defaultdict
 
-class custom(object):
 
-    def forEach(self,x="" ,y=""):
-        for x in y.keys():
-            print "the key name is '%s' and its value is %s" % (x, y[x])
+def forEach(x="", y=""):
+    for x in y.keys():
+        print "the key name is '%s' and its value is %s" % (x, y[x])
 
-    def combineList(self, a, b):
-        #listA = ["id", "name", "city", "state"]
-        #listB = ["1", "Paul", "Columbus", "ohio", "43232"]
 
-        if not len(a) == len(b):
-                print "List don't match"
+def combineList(a, b):
+    if not len(a) == len(b):
+        print "List don't match"
 
-        d = defaultdict(list)
-        for x, y in zip(a, b):
-            d[x].append(y)
+    d = defaultdict(list)
+    for x, y in zip(a, b):
+        d[x].append(y)
         d = dict(d)
 
-        return d
+    return d
+
+
+def dictValueExist(urlQuery, dictList):
+    default = False
+
+    if isinstance(dictList, dict):
+        return next((k for k, v in dictList.items() if v == urlQuery), None)
+
+    else:
+        return default
+
+def ExtendList(x=None):
+    y = []
+    listNumb = len(x)
+    for eachC in x:
+        y.extend(eachC)
+
+    y.append(listNumb)
+    return y

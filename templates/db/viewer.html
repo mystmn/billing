@@ -5,31 +5,40 @@
 {% endblock %}
 
 {% block main_content %}
-<p>{{msg}}</p>
-<p></p>
 
-{% for key, value in tbl_select_results.items() %}
-<div class="row" style="margin: 4px;">
-    <div class="col-xs-3">
-        {{ key }} : {{ value }}
+<b>Table</b> is for <font style="color:red">{{ tName }}</font>:  with  rows:
+<div class="row">
+    <div class="col-xs-6">
+        <h4><b>Tables Available:</b></h4>
     </div>
-    {% for i in cmd %}
-    <div class="col-xs-1"><a href="{{ url_for('dbset')}}{{key}}/{{i.lower()}}">{{i}}</a></div>
-    {% endfor %}
-    <!--   <ul><li>{{ i }}</li></ul></div> -->
 </div>
-{% endfor %}
-
-{% if results %}
-    {% for go in results %}
-        <p>
-        {% for label in go %}
-            {% include 'forms.html' %}
-            {% endfor %}
-        </p>
+<div class="row">
+    <div class="col-xs-6">
+        <ul>
+            <li><a href="{{url_for('dbset')}}d/view">All Tables: {{cmd[0]}}</a></li>
+            <li><a href="{{url_for('dbset')}}billing/view">Bill: {{cmd[0]}}</a></li>
+        </ul>
+    </div>
+</div>
+<div class="row">
+    {% if type == "dict" %}
+        {% for k,v in tR.items() %}
+            {% if v == False %}
+                {{k}}
+            {% endif %}
     {% endfor %}
-
-{% include 'forms.html' %}
-
-{% endif %}
+    {% endif %}
+    <!-- New statement-->
+    {% if type == "list"%}
+        {% for g in tR %}
+            <div class="row">
+                {%for j in g %}
+                <div class="col-xs-2">
+                    {{j}}
+                </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    {% endif %}
+</div>
 {% endblock %}
