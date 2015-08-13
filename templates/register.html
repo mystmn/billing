@@ -1,0 +1,34 @@
+<div class="row">
+     <div class="col-xs-12 col-md-8">
+            {% for message in form.firstname.errors %}
+            <div class="flash">{{ message }}</div>
+            {% endfor %}
+
+            {% for message in form.lastname.errors %}
+            <div class="flash">{{ message }}</div>
+            {% endfor %}
+
+            {% for message in form.city.errors %}
+            <div class="flash">{{ message }}</div>
+            {% endfor %}
+
+            <form method=POST action="{{ url_for('dbset')}}{{table}}/{{type}}">
+                {{ form.hidden_tag() }}
+
+                {{ form.firstname.label }}
+                {{ form.firstname (placeholder="What is your first name?") }}
+
+                {{ form.lastname.label }}
+                {{ form.lastname (placeholder="What is your last name?") }}
+
+                {{ form.address.label }}
+                {{ form.address (placeholder="What's your current address?") }}
+
+                {{ form.city.label }}
+                {{ form.city (placeholder="What city do you live in currectly?") }}
+
+                {{ form.submit }}
+                <input type=submit id="submit" value="Post">
+            </form>
+        </div>
+</div>

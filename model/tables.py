@@ -8,6 +8,7 @@ class dbStructure(object):
 
     def __init__(self):
         ''' Takes the URL Query request, compares to our static dict, and looks through our database '''
+        ''' {Table Name: Code Name found through URL Query } '''
         self.tableNames = {'Bill':'billing', 'cows':'test', 'queryTableNames':'d'}
 
         ''' Same thing here, URL Query to predetermined dict, compares and continues to database '''
@@ -24,7 +25,6 @@ class dbStructure(object):
             [queryOperator=SELECT] [dbColumnSearch=id, name, date] FROM [queryTableName=Billing]
         '''
 
-        a = {}
         secureTableName = func_.dictValueExist(queryTableName, self.tableNames)
 
         if self.verifyTableExistence(secureTableName):

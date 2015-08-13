@@ -6,7 +6,7 @@
 
 {% block main_content %}
 
-<b>Table</b> is for <font style="color:red">{{ tName }}</font>:  with  rows:
+<b>Method: {{signal}}</b> -- <b>Table</b> is for <font style="color:red">{{ table }}</font>:  with  rows:
 <div class="row">
     <div class="col-xs-6">
         <h4><b>Tables Available:</b></h4>
@@ -15,12 +15,15 @@
 <div class="row">
     <div class="col-xs-6">
         <ul>
-            <li><a href="{{url_for('dbset')}}d/view">All Tables: {{cmd[0]}}</a></li>
-            <li><a href="{{url_for('dbset')}}billing/view">Bill: {{cmd[0]}}</a></li>
+            <li><a href="{{url_for('dbset')}}d/{{cmd[0]}}">All Tables: {{cmd[0]}}</a></li>
+            <li><a href="/reg">Reg</a></li>
+            <li><a href="{{url_for('dbset')}}billing/{{cmd[0]}}">Bill: {{cmd[0]}}</a></li>
+            <li><a href="{{url_for('dbset')}}billing/{{cmd[1]}}">Bill: {{cmd[1]}}</a></li>
         </ul>
     </div>
 </div>
 <div class="row">
+    <!-- Was there an error found? -->
     {% if type == "dict" %}
         {% for k,v in tR.items() %}
             {% if v == False %}
@@ -28,7 +31,7 @@
             {% endif %}
     {% endfor %}
     {% endif %}
-    <!-- New statement-->
+    <!-- Were there results found? -->
     {% if type == "list"%}
         {% for g in tR %}
             <div class="row">
@@ -41,4 +44,11 @@
         {% endfor %}
     {% endif %}
 </div>
+
+{% if form %}
+    {% include 'register.html' %}
+{% else %}
+    <p>{{flash}}</p>
+{% endif %}
+
 {% endblock %}
