@@ -39,10 +39,9 @@ def dbset(table=None, type=None):
     cmd = ["view", "insert", "delete", "update"]
 
     ''' What Columns am I looking for? '''
-    selectorsUnite = ["id", "lastName", "firstName"]
+    selectorsUnite = ["id", "firstName", "lastName", "address", "city"]
 
     if request.method == 'GET':
-        signal = "GET"
         ''' Let's fetch our Database results now '''
         tR = tables.dbStructure().main(table, type, selectorsUnite)
 
@@ -59,7 +58,7 @@ def dbset(table=None, type=None):
         form = Bill(request.form)
 
         if form.validate():
-            flash = 'Thanks for registering'
+            flash = 'Thanks for registering: %s' % form.city._value()
             return render_template('db/viewer.html', cmd=cmd, tR=tR, table=table, type=type, flash=flash)
 
         else:
@@ -67,34 +66,17 @@ def dbset(table=None, type=None):
 
     return render_template('db/viewer.html', cmd=cmd, tR=tR, table=table, type=type, form=form)
 
-@app.route('/reg', methods=['GET', 'POST'])
-def reg():
-    form = Bill(request.form)
-
-    if request.method == 'POST':
-        if form.validate():
-            username = [form.username.data, form.email.data]
-            flash('Thanks for registering')
-            pr = True
-            redirect('dbset')
-            return redirect(url_for('home', pr=True))
-        else:
-            return render_template('register.html', form=form, pr=False)
-
-    elif request.method == 'GET':
-        return render_template('register.html', form=form)
-
-    else:
-        return redirect(url_for('reg'))
-
 ''' Name your Table '''
 class Bill(Form):
-    ''' What columns are involved? '''
-    columnTypes = ['id', 'LastName', 'FirstName', 'Address', 'City']
-    firstname = StringField('First Name', [validators.DataRequired("Please Enter your Name")])
-    lastname = StringField('Last Name',  [validators.DataRequired("Please Enter your Email")])
-    address = StringField('Address')
-    city = StringField('City',  [validators.DataRequired("Please Enter your City")])
+
+    sing = {'cows':'grzing', 'horses':'prance'}
+#        fields = {'id':None, 'FirstName':'First Name', 'LastName': 'Last Name', 'Address':'Address', 'City':'City'}
+
+    for k,v in sing.items():
+        firstname = StringField(v, [validators.DataRequired("Please Enter your %s"% k)])
+        lastname = StringField(v,  [validators.DataRequired("Please Enter your %s"% k)])
+        address = StringField(v)
+        city = StringField(v,  [validators.DataRequired("Please Enter your %s"% k)])
 
 @app.route('/stream')
 def streamed_response():
